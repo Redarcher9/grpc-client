@@ -1,0 +1,39 @@
+syntax="proto3";
+
+option go_package="./proto";
+
+package greet_service;
+
+service GreetService{
+    //simple RPC
+    rpc SayHello(NoParam) returns (HelloResponse);
+    rpc GetMobilesByOs(MobilesByOsRequest) returns(MobilesByOsResponse);
+}
+
+message Mobile{
+    string modelID =1;
+    string name =2;
+    string os=3;
+    string country=4;
+
+    message Brand{
+        string name=1;
+        string brandID=2;
+    }
+
+    Brand brand =5;
+}
+
+message MobilesByOsRequest{
+    string os=1;
+}
+
+message MobilesByOsResponse{
+    repeated Mobile mobiles=1;
+}
+
+message NoParam {};
+
+message HelloResponse{
+    string message=1;
+}

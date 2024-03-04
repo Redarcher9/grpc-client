@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -23,6 +24,7 @@ func main() {
 
 	client := pb.NewGreetServiceClient(conn)
 	callSayHello(client)
+	callGetMobileByOs(client)
 
 }
 
@@ -30,14 +32,26 @@ func callSayHello(client pb.GreetServiceClient) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	res, _ := client.SayHello(ctx, &pb.NoParam{})
-	res1, err := client.GetMobilesByOs(ctx, &pb.MobilesByOsRequest{
+	res, err := client.SayHello(ctx, &pb.NoParam{})
+
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+	fmt.Println("GRPC Say Hellp Call Response:")
+	fmt.Println(res)
+}
+
+func callGetMobileByOs(client pb.GreetServiceClient) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	res, err := client.GetMobilesByOs(ctx, &pb.MobilesByOsRequest{
 		Os: "IOS",
 	})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-
-	log.Printf("%s", res.Message)
-	log.Printf("%s", res1.Mobiles)
+	fmt.Println("GRPC Call Response:")
+	fmt.Println(res.Mobiles)
 }
